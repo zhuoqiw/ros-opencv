@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Build opencv
 RUN wget -O opencv.tar.gz ${OPENCV_TAR_GZ} \
-  && mkdir opencv build \
-  && tar -xzf opencv.tar.gz --strip-components=1 -C opencv \
+  && mkdir opencv-src opencv-bld \
+  && tar -xzf opencv.tar.gz --strip-components=1 -C opencv-src \
   && cmake \
     -D CMAKE_BUILD_TYPE:STRING=Release \
     -D CMAKE_INSTALL_PREFIX:STRING=/opt/opencv \
@@ -80,10 +80,10 @@ RUN wget -O opencv.tar.gz ${OPENCV_TAR_GZ} \
     -D WITH_WEBP:BOOL=OFF \
     -D WITH_XIMEA:BOOL=OFF \
     -D WITH_XINE:BOOL=OFF \
-    -S opencv/ \
-    -B build/ \
-  && cmake --build build/ --target install \
-  && rm -r opencv.tar.gz opencv build
+    -S opencv-src/ \
+    -B opencv-bld/ \
+  && cmake --build opencv-bld/ --target install \
+  && rm -r opencv.tar.gz opencv-src opencv-bld
 
 # Update ldconfig
 RUN echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
