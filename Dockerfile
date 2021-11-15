@@ -1,4 +1,4 @@
-# Compile opencv against ROS
+# Compile OpenCV against ROS
 FROM ros:galactic
 
 # URL
@@ -12,10 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Build opencv
 RUN wget -O opencv.tar.gz ${OPENCV_TAR_GZ} \
   && mkdir opencv-src opencv-bld \
-  && tar -xzf opencv.tar.gz --strip-components=1 -C opencv-src \
+  && tar -xzf opencv.tar.gz --strip-components=1 --directory=opencv-src \
   && cmake \
     -D CMAKE_BUILD_TYPE:STRING=Release \
-    -D CMAKE_INSTALL_PREFIX:STRING=/opt/opencv \
+    -D CMAKE_INSTALL_PREFIX:STRING=/opt/OpenCV \
     -D BUILD_LIST:STRING=core,imgproc,calib3d \
     -D BUILD_TESTS:BOOL=OFF \
     -D BUILD_PERF_TESTS:BOOL=OFF \
@@ -86,5 +86,5 @@ RUN wget -O opencv.tar.gz ${OPENCV_TAR_GZ} \
   && rm -r opencv.tar.gz opencv-src opencv-bld
 
 # Update ldconfig
-RUN echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
+RUN echo "/opt/OpenCV/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
   && ldconfig
