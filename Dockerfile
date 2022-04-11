@@ -9,7 +9,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     cmake
 
 # Clone opencv repo
-RUN wget https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
+RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
     && tar -xzf 4.5.5.tar.gz
 
 # Config, build, install TIS
