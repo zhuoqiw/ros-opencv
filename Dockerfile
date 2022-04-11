@@ -1,22 +1,22 @@
-# Compile OpenCV against ROS
-FROM ros:galactic
-
-# URL
-ARG OPENCV_TAR_GZ=https://github.com/opencv/opencv/archive/refs/tags/4.5.2.tar.gz
+# Compile OpenCV
+FROM ubuntu:20.04 AS base
 
 # Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  wget \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends \
+    ca-certificates \
+    lsb-release \
+    git \
+    build-essential \
+    cmake
 
-# Build opencv
-RUN wget -O opencv.tar.gz ${OPENCV_TAR_GZ} \
-  && mkdir opencv-src opencv-bld \
-  && tar -xzf opencv.tar.gz --strip-components=1 --directory=opencv-src \
-  && cmake \
+# Clone opencv repo
+RUN git clone -b 4.5.5 https://github.com/opencv/opencv.git
+
+# Config, build, install TIS
+RUN cmake  \
     -D CMAKE_BUILD_TYPE:STRING=Release \
-    -D CMAKE_INSTALL_PREFIX:STRING=/opt/OpenCV \
-    -D BUILD_LIST:STRING=core,imgproc,calib3d \
+    -D BUILD_LIST:STRING=core \
     -D BUILD_TESTS:BOOL=OFF \
     -D BUILD_PERF_TESTS:BOOL=OFF \
     -D BUILD_EXAMPLES:BOOL=OFF \
@@ -80,11 +80,7 @@ RUN wget -O opencv.tar.gz ${OPENCV_TAR_GZ} \
     -D WITH_WEBP:BOOL=OFF \
     -D WITH_XIMEA:BOOL=OFF \
     -D WITH_XINE:BOOL=OFF \
-    -S opencv-src/ \
-    -B opencv-bld/ \
-  && cmake --build opencv-bld/ --target install \
-  && rm -r opencv.tar.gz opencv-src opencv-bld
+    -S opencv \
+    -B opencv/build \
+    && cmake --build opencv/build --target package
 
-# Update ldconfig
-RUN echo "/opt/OpenCV/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
-  && ldconfig
