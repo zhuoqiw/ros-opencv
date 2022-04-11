@@ -11,7 +11,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     cmake
 
 # Clone opencv repo
-RUN git clone -b 4.5.5 https://github.com/opencv/opencv.git
+RUN git clone --branch 4.5.5  --depth 1 https://github.com/opencv/opencv.git
 
 # Config, build, install TIS
 RUN cmake  \
@@ -80,6 +80,8 @@ RUN cmake  \
     -D WITH_WEBP:BOOL=OFF \
     -D WITH_XIMEA:BOOL=OFF \
     -D WITH_XINE:BOOL=OFF \
+    -D HIGHGUI_ENABLE_PLUGINS:BOOL=OFF \
+    -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv \
     -B opencv/build \
     && cmake --build opencv/build --target package
