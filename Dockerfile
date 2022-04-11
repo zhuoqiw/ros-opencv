@@ -85,5 +85,5 @@ RUN cmake  \
     -D HIGHGUI_ENABLE_PLUGINS:BOOL=OFF \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv \
-    -B opencv/build
+    -B opencv/build \
     && cmake --build opencv/build
