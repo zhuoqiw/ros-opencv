@@ -1,10 +1,12 @@
 # Compile OpenCV
-FROM ros:galactic
+FROM ubuntu:20.04
 
 # Install dependencies
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
-    wget
+    wget \
+    build-essential \
+    cmake
 
 # Clone opencv repo
 RUN wget https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
@@ -84,4 +86,3 @@ RUN cmake  \
     -S opencv-4.5.5 \
     -B opencv-4.5.5/build \
     && cmake --build opencv-4.5.5/build
-
