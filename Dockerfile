@@ -8,7 +8,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # Clone opencv repo
 RUN wget https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
-    && tar -xzf opencv-4.5.5.tar.gz
+    && tar -xzf 4.5.5.tar.gz
 
 # Config, build, install TIS
 RUN cmake  \
@@ -84,3 +84,4 @@ RUN cmake  \
     -S opencv-4.5.5 \
     -B opencv-4.5.5/build \
     && cmake --build opencv/build
+
