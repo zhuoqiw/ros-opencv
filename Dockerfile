@@ -1,17 +1,14 @@
 # Compile OpenCV
-FROM ubuntu:20.04 AS base
+FROM ros:galactic
 
 # Install dependencies
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
-    ca-certificates \
-    lsb-release \
-    git \
-    build-essential \
-    cmake
+    wget
 
 # Clone opencv repo
-RUN git clone --branch 4.5.5  --depth 1 https://github.com/opencv/opencv.git
+RUN wget https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
+    && tar -xzf opencv-4.5.5.tar.gz
 
 # Config, build, install TIS
 RUN cmake  \
@@ -21,7 +18,7 @@ RUN cmake  \
     -D BUILD_TESTS:BOOL=OFF \
     -D BUILD_PERF_TESTS:BOOL=OFF \
     -D BUILD_EXAMPLES:BOOL=OFF \
-    -D BUILD_opencv_apps=OFF \
+    -D BUILD_opencv_apps:BOOL=OFF \
     -D BUILD_ZLIB:BOOL=OFF \
     -D WITH_1394:BOOL=OFF \
     -D WITH_ADE:BOOL=OFF \
@@ -84,6 +81,6 @@ RUN cmake  \
     -D WITH_XINE:BOOL=OFF \
     -D HIGHGUI_ENABLE_PLUGINS:BOOL=OFF \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
-    -S opencv \
-    -B opencv/build \
+    -S opencv-4.5.5 \
+    -B opencv-4.5.5/build \
     && cmake --build opencv/build
