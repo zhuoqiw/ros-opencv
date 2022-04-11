@@ -83,5 +83,5 @@ RUN cmake  \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv-4.5.5 \
     -B opencv-4.5.5/build \
-    && cmake --build opencv/build
+    && cmake --build opencv-4.5.5/build
 
