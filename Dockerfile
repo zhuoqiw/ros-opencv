@@ -15,7 +15,7 @@ RUN git clone --branch 4.5.5  --depth 1 https://github.com/opencv/opencv.git
 
 # Config, build, install TIS
 RUN cmake  \
-    -D CMAKE_INSTALL_PREFIX:STRING=/opt/OpenCV
+    -D CMAKE_INSTALL_PREFIX:STRING=/opt/OpenCV \
     -D CMAKE_BUILD_TYPE:STRING=Release \
     -D BUILD_LIST:STRING=core \
     -D BUILD_TESTS:BOOL=OFF \
