@@ -1,35 +1,19 @@
 # Compile OpenCV
 FROM ros:galactic AS base
 
-# Install dependencies
+# Install wget
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     wget
 
-# Clone opencv repo
+# Get opencv source code
 RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
     && tar -xzf 4.5.5.tar.gz
 
-# Config, build, install TIS
+# Config
 RUN cmake  \
-    -D CPACK_BINARY_DEB:BOOL=OFF \
-    -D CPACK_BINARY_FREEBSD:BOOL=OFF \
-    -D CPACK_BINARY_IFW:BOOL=OFF \
-    -D CPACK_BINARY_NSIS:BOOL=OFF \
-    -D CPACK_BINARY_RPM:BOOL=OFF \
-    -D CPACK_BINARY_STGZ:BOOL=OFF \
-    -D CPACK_BINARY_TBZ2:BOOL=OFF \
-    -D CPACK_BINARY_TGZ:BOOL=ON \
-    -D CPACK_BINARY_TXZ:BOOL=OFF \
-    -D CPACK_BINARY_TZ:BOOL=OFF \
-    -D CPACK_SOURCE_RPM:BOOL=OFF \
-    -D CPACK_SOURCE_TBZ2:BOOL=OFF \
-    -D CPACK_SOURCE_TGZ:BOOL=ON \
-    -D CPACK_SOURCE_TXZ:BOOL=OFF \
-    -D CPACK_SOURCE_TZ:BOOL=OFF \
-    -D CPACK_SOURCE_ZIP:BOOL=OFF \
     -D CMAKE_BUILD_TYPE:STRING=Release \
-    -D BUILD_LIST:STRING=core \
+    -D BUILD_LIST:STRING=core,imgproc,calib3d \
     -D BUILD_TESTS:BOOL=OFF \
     -D BUILD_PERF_TESTS:BOOL=OFF \
     -D BUILD_EXAMPLES:BOOL=OFF \
@@ -96,13 +80,34 @@ RUN cmake  \
     -D WITH_WEBP:BOOL=OFF \
     -D WITH_XIMEA:BOOL=OFF \
     -D WITH_XINE:BOOL=OFF \
+    -D CPACK_PACKAGE_FILE_NAME::STRING=opencv \
+    -D CPACK_BINARY_DEB:BOOL=OFF \
+    -D CPACK_BINARY_FREEBSD:BOOL=OFF \
+    -D CPACK_BINARY_IFW:BOOL=OFF \
+    -D CPACK_BINARY_NSIS:BOOL=OFF \
+    -D CPACK_BINARY_RPM:BOOL=OFF \
+    -D CPACK_BINARY_STGZ:BOOL=OFF \
+    -D CPACK_BINARY_TBZ2:BOOL=OFF \
+    -D CPACK_BINARY_TGZ:BOOL=ON \
+    -D CPACK_BINARY_TXZ:BOOL=OFF \
+    -D CPACK_BINARY_TZ:BOOL=OFF \
+    -D CPACK_SOURCE_RPM:BOOL=OFF \
+    -D CPACK_SOURCE_TBZ2:BOOL=OFF \
+    -D CPACK_SOURCE_TGZ:BOOL=ON \
+    -D CPACK_SOURCE_TXZ:BOOL=OFF \
+    -D CPACK_SOURCE_TZ:BOOL=OFF \
+    -D CPACK_SOURCE_ZIP:BOOL=OFF \
     -D HIGHGUI_ENABLE_PLUGINS:BOOL=OFF \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -D PARALLEL_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv-4.5.5 \
     -B opencv-4.5.5/build
+
+# Build package
 RUN cmake --build opencv-4.5.5/build --target package
 
+# Use busybox as package container
 FROM busybox:latest
 
-COPY --from=base /opencv-4.5.5/build/OpenCV*.tar.gz /OpenCV.tar.gz
+# Copy from base to busybox
+COPY --from=base /opencv-4.5.5/build/opencv.tar.gz /opencv.tar.gz
