@@ -103,6 +103,6 @@ RUN cmake  \
     -B opencv-4.5.5/build
 RUN cmake --build opencv-4.5.5/build --target package
 
-from busybox:latest
+FROM busybox:latest
 
 COPY --from=base /opencv-4.5.5/build/OpenCV*.tar.gz /OpenCV.tar.gz
