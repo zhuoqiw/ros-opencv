@@ -12,6 +12,7 @@ RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/ta
 
 # Config
 RUN cmake  \
+    -D CMAKE_INSTALL_PREFIX:STRING=/opt/opencv \
     -D CMAKE_BUILD_TYPE:STRING=Release \
     -D BUILD_LIST:STRING=core,imgproc,calib3d \
     -D BUILD_TESTS:BOOL=OFF \
@@ -80,34 +81,17 @@ RUN cmake  \
     -D WITH_WEBP:BOOL=OFF \
     -D WITH_XIMEA:BOOL=OFF \
     -D WITH_XINE:BOOL=OFF \
-    -D CPACK_PACKAGE_FILE_NAME::STRING=opencv \
-    -D CPACK_BINARY_DEB:BOOL=OFF \
-    -D CPACK_BINARY_FREEBSD:BOOL=OFF \
-    -D CPACK_BINARY_IFW:BOOL=OFF \
-    -D CPACK_BINARY_NSIS:BOOL=OFF \
-    -D CPACK_BINARY_RPM:BOOL=OFF \
-    -D CPACK_BINARY_STGZ:BOOL=OFF \
-    -D CPACK_BINARY_TBZ2:BOOL=OFF \
-    -D CPACK_BINARY_TGZ:BOOL=ON \
-    -D CPACK_BINARY_TXZ:BOOL=OFF \
-    -D CPACK_BINARY_TZ:BOOL=OFF \
-    -D CPACK_SOURCE_RPM:BOOL=OFF \
-    -D CPACK_SOURCE_TBZ2:BOOL=OFF \
-    -D CPACK_SOURCE_TGZ:BOOL=ON \
-    -D CPACK_SOURCE_TXZ:BOOL=OFF \
-    -D CPACK_SOURCE_TZ:BOOL=OFF \
-    -D CPACK_SOURCE_ZIP:BOOL=OFF \
     -D HIGHGUI_ENABLE_PLUGINS:BOOL=OFF \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -D PARALLEL_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv-4.5.5 \
     -B opencv-4.5.5/build
 
-# Build package
-RUN cmake --build opencv-4.5.5/build --target package
+# Build, install package
+RUN cmake --build opencv-4.5.5/build --target install
 
 # Use busybox as package container
 FROM busybox:latest
 
 # Copy from base to busybox
-COPY --from=base /opencv-4.5.5/build/opencv.tar.gz /opencv.tar.gz
+COPY --from=base /opt/opencv /opt/opencv
