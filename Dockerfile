@@ -13,6 +13,21 @@ RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/ta
 # Config, build, install TIS
 RUN cmake  \
     -D CPACK_BINARY_DEB:BOOL=ON \
+    -D CPACK_BINARY_FREEBSD:BOOL=OFF \
+    -D CPACK_BINARY_IFW:BOOL=OFF \
+    -D CPACK_BINARY_NSIS:BOOL=OFF \
+    -D CPACK_BINARY_RPM:BOOL=OFF \
+    -D CPACK_BINARY_STGZ:BOOL=OFF \
+    -D CPACK_BINARY_TBZ2:BOOL=OFF \
+    -D CPACK_BINARY_TGZ:BOOL=OFF \
+    -D CPACK_BINARY_TXZ:BOOL=OFF \
+    -D CPACK_BINARY_TZ:BOOL=OFF \
+    -D CPACK_SOURCE_RPM:BOOL=OFF \
+    -D CPACK_SOURCE_TBZ2:BOOL=OFF \
+    -D CPACK_SOURCE_TGZ:BOOL=OFF \
+    -D CPACK_SOURCE_TXZ:BOOL=OFF \
+    -D CPACK_SOURCE_TZ:BOOL=OFF \
+    -D CPACK_SOURCE_ZIP:BOOL=OFF \
     -D CMAKE_BUILD_TYPE:STRING=Release \
     -D BUILD_LIST:STRING=core \
     -D BUILD_TESTS:BOOL=OFF \
@@ -82,5 +97,5 @@ RUN cmake  \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -D PARALLEL_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv-4.5.5 \
-    -B opencv-4.5.5/build \
-    && cmake --build opencv-4.5.5/build --target package
+    -B opencv-4.5.5/build
+RUN cmake --build opencv-4.5.5/build --target package
