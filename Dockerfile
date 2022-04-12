@@ -1,5 +1,5 @@
 # Compile OpenCV
-FROM ros:galactic
+FROM ros:galactic AS base
 
 # Install dependencies
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -102,3 +102,7 @@ RUN cmake  \
     -S opencv-4.5.5 \
     -B opencv-4.5.5/build
 RUN cmake --build opencv-4.5.5/build --target package
+
+from busybox:latest
+
+COPY --from=base /opencv-4.5.5/build/OpenCV*.tar.gz /OpenCV.tar.gz
