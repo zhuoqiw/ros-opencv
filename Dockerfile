@@ -24,6 +24,7 @@ RUN cmake  \
     -D WITH_ARAVIS:BOOL=OFF \
     -D WITH_ARITH_DEC:BOOL=OFF \
     -D WITH_ARITH_ENC:BOOL=OFF \
+    -D WITH_CAROTENE:BOOL=OFF \
     -D WITH_CLP:BOOL=OFF \
     -D WITH_CUDA:BOOL=OFF \
     -D WITH_EIGEN:BOOL=OFF \
@@ -85,8 +86,7 @@ RUN cmake  \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -D PARALLEL_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv-4.5.5 \
-    -B opencv-4.5.5/build \
-    -LA
+    -B opencv-4.5.5/build
 
 # Build, install package
 RUN cmake --build opencv-4.5.5/build --target install
