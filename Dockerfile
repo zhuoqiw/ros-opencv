@@ -85,7 +85,8 @@ RUN cmake  \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -D PARALLEL_ENABLE_PLUGINS:BOOL=OFF \
     -S opencv-4.5.5 \
-    -B opencv-4.5.5/build
+    -B opencv-4.5.5/build \
+    -LA
 
 # Build, install package
 RUN cmake --build opencv-4.5.5/build --target install
