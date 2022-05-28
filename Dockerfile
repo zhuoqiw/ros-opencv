@@ -1,5 +1,8 @@
+# ROS code name: galactic, humble
+ARG TAG
+
 # Compile OpenCV
-FROM ros:galactic AS base
+FROM ros:${TAG} AS base
 
 # Install wget
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
