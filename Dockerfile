@@ -1,13 +1,14 @@
 # ROS code name: galactic, humble
-ARG TAG
+ARG ROS_DISTRO
 
 # Compile OpenCV
-FROM ros:${TAG} AS base
+FROM ros:${ROS_DISTRO} AS base
 
 # Install wget
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
-    wget
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # Get opencv source code
 RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
@@ -94,8 +95,14 @@ RUN cmake  \
 # Build, install package
 RUN cmake --build opencv-4.5.5/build --target install
 
+# Update ldconfig
+RUN echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/opencv.conf
+
 # Use busybox as package container
 FROM busybox:latest
 
 # Copy from base to busybox
-COPY --from=base /opt/opencv /opt/opencv
+COPY --from=base /opt/opencv /setup/opt/opencv
+
+# Copy ldconfig
+COPY --from=base /etc/ld.so.conf.d/opencv.conf /setup/etc/ld.so.conf.d/opencv.conf
