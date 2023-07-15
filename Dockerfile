@@ -1,8 +1,5 @@
-# ROS code name: galactic, humble
-ARG ROS_DISTRO
-
 # Compile OpenCV
-FROM ros:${ROS_DISTRO} AS base
+FROM ros:humble AS base
 
 # Install wget
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -11,8 +8,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && rm -rf /var/lib/apt/lists/*
 
 # Get opencv source code
-RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz \
-    && tar -xzf 4.5.5.tar.gz
+RUN wget --no-check-certificate https://github.com/opencv/opencv/archive/refs/tags/4.8.0.tar.gz \
+    && tar -xzf 4.8.0.tar.gz
 
 # Config
 RUN cmake  \
@@ -89,11 +86,11 @@ RUN cmake  \
     -D HIGHGUI_ENABLE_PLUGINS:BOOL=OFF \
     -D VIDEOIO_ENABLE_PLUGINS:BOOL=OFF \
     -D PARALLEL_ENABLE_PLUGINS:BOOL=OFF \
-    -S opencv-4.5.5 \
-    -B opencv-4.5.5/build
+    -S opencv-4.8.0 \
+    -B opencv-4.8.0/build
 
 # Build, install package
-RUN cmake --build opencv-4.5.5/build --target install
+RUN cmake --build opencv-4.8.0/build --target install
 
 # Update ldconfig
 RUN echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/opencv.conf
